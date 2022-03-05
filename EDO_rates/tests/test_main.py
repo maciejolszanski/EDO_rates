@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 import pytest
 from EDO_rates.main import *
 import datetime
@@ -14,13 +13,25 @@ def test_get_user_dates(monkeypatch):
 
     assert date1, date2 == ['12-21', '01-15']
 
-validate_input_data_test_array = [
+validate_input_data_test_data = [
     ('q', [None, True]),
     ('a', [None, False]),
     ('01-21', [datetime.datetime.strptime('01-21','%m-%y'), False]),
 ]
-@pytest.mark.parametrize('sample, expected', validate_input_data_test_array)
+@pytest.mark.parametrize('sample, expected', validate_input_data_test_data)
 def test_validate_input_data(sample, expected):
     date_user, end = validate_input_data(sample)
 
     assert [date_user, end] == expected
+
+validate_dates_input_data = [
+    (datetime.date(2012, 2, 1), datetime.date(2015,8,1), True),
+    (datetime.date(2022, 2, 1), datetime.date(2015,8,1), False),
+    (datetime.date(2022, 2, 1), datetime.date(2022,2,1), False),
+    (datetime.date(2036, 2, 1), datetime.date(2015,8,1), False),
+    (datetime.date(2022, 2, 1), datetime.date(2036,8,1), False),
+]
+@pytest.mark.parametrize('date1, date2, expected', validate_dates_input_data)
+def test_validate_dates(date1, date2, expected):
+    assert validate_dates(date1, date2) == expected
+
