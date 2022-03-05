@@ -1,4 +1,3 @@
-from cv2 import exp
 import requests
 
 from bs4 import BeautifulSoup
