@@ -119,22 +119,23 @@ def get_dates_to_check(init, fin):
     while fin - date >= datetime.timedelta(days=0):
         dates.append(date)
         date += relativedelta(months=1)
-    
+
     return dates
+
 
 def get_exp_str(date_list):
     '''converts dates to strings mmyy of expiration date'''
     exp_str_list = []
-    
+
     for date in date_list:
         exp_date = date + relativedelta(years=10)
         month_str = str(exp_date.month)
-        if  len(month_str) < 2:
+        if len(month_str) < 2:
             month_str = '0' + month_str
         year_str = str(exp_date.year)
         exp_str = month_str + year_str[-2:]
         exp_str_list.append(exp_str)
-    
+
     return exp_str_list
 
 
@@ -152,7 +153,7 @@ if __name__ == '__main__':
         # When the dates are invalid the while loop starts again
         elif init_date is None or fin_date is None:
             continue
-        
+
         dates_to_check = get_dates_to_check(init_date, fin_date)
         exp_dates_str = get_exp_str(dates_to_check)
 
@@ -161,5 +162,5 @@ if __name__ == '__main__':
         for i, exp in enumerate(exp_dates_str):
             rates.append(get_edo_rate(exp))
             print(f"Collected {i+1}/{len(exp_dates_str)}")
-        
+
         break
