@@ -128,6 +128,22 @@ def get_dates_to_check(init, fin):
     
     return dates
 
+def get_exp_str(date_list):
+    '''converts dates to strings mmyy of expiration date'''
+    exp_str_list = []
+    
+    for date in date_list:
+        exp_date = date + relativedelta(years=10)
+        month_str = str(exp_date.month)
+        if  len(month_str) < 2:
+            month_str = '0' + month_str
+        year_str = str(exp_date.year)
+        exp_str = month_str + year_str[-2:]
+        exp_str_list.append(exp_str)
+    
+    return exp_str_list
+
+
 if __name__ == '__main__':
 
     print(INFO)
@@ -144,3 +160,4 @@ if __name__ == '__main__':
             continue
         
         dates_to_check = get_dates_to_check(init_date, fin_date)
+        
