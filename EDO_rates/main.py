@@ -3,7 +3,7 @@ import datetime
 
 from bs4 import BeautifulSoup
 from dateutil.relativedelta import relativedelta
-from visualise import visulise_EDO
+from EDO_rates.visualise import visulise_EDO
 
 INFO = '''\nHello!
 This program will show you what was the rent of Polish EDO through time.
