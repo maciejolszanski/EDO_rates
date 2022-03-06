@@ -15,7 +15,6 @@ def get_edo_rate(exp_date_string):
     '''Web scraping for the price of the EDO with particular expiration date'''
 
     url = f'''https://www.obligacjeskarbowe.pl/oferta-obligacji/obligacje-10-letnie-edo/edo{exp_date_string}/'''
-    print(url)
     edo_site = requests.get(url).text
     edo_html = BeautifulSoup(edo_site, 'html.parser')
 
@@ -23,11 +22,6 @@ def get_edo_rate(exp_date_string):
     rate = float('.'.join(rate))
 
     return rate
-
-
-def date_to_exp_string(date):
-    '''creates a string formated as mmyy from date e/g/ 0322 from 01.03.2022'''
-    pass
 
 
 def get_user_dates():
@@ -160,4 +154,12 @@ if __name__ == '__main__':
             continue
         
         dates_to_check = get_dates_to_check(init_date, fin_date)
+        exp_dates_str = get_exp_str(dates_to_check)
+
+        print('\nCollecting data...')
+        rates = []
+        for i, exp in enumerate(exp_dates_str):
+            rates.append(get_edo_rate(exp))
+            print(f"Collected {i+1}/{len(exp_dates_str)}")
         
+        break
