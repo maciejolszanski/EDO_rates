@@ -1,8 +1,10 @@
-from shutil import which
 import matplotlib.pyplot as plt
+import datetime
 
 def visulise_EDO(dates, rates):
 
+    dates = _convert_dates_to_datetimes(dates)
+    
     plt.style.use('classic')
     fig, ax = plt.subplots()
     ax.plot(dates,rates)
@@ -14,3 +16,12 @@ def visulise_EDO(dates, rates):
     ax.tick_params('both', which='major', labelsize=10)
 
     plt.show()
+
+def _convert_dates_to_datetimes(dates):
+    '''Only for estetic purposes - it is better displayed by matplotlib'''
+
+    datetimes = []
+    for date in dates:
+        datetimes.append(datetime.datetime(date.year, date.month, date.day))
+
+    return datetimes
