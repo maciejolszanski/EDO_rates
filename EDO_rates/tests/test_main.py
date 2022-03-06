@@ -35,11 +35,22 @@ validate_dates_input_data = [
 def test_validate_dates(date1, date2, expected):
     assert validate_dates(date1, date2) == expected
 
-def test_get_dates_to_check():
+@pytest.fixture
+def dates():
     date1 = datetime.date(2012, 1, 1)
     date2 = datetime.date(2012, 2, 1)
     date3 = datetime.date(2012, 3, 1)
 
     dates = [date1, date2, date3]
 
-    assert get_dates_to_check(date1, date3) == dates
+    return dates
+
+def test_get_dates_to_check(dates):
+    date1 = datetime.date(2012, 1, 1)
+    date2 = datetime.date(2012, 3, 1)
+
+    assert get_dates_to_check(date1, date2) == dates
+
+def test_get_exp_str(dates):
+    exp_str = get_exp_str(dates)
+    assert exp_str == ['0122', '0222', '0322']
