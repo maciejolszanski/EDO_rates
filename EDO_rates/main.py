@@ -11,6 +11,7 @@ Follow the instructions below to receive an answer.
 (If you would like to quit the program type 'q')
 '''
 
+
 def get_edo_rate(exp_date_string):
     '''Web scraping for the price of the EDO with particular expiration date'''
 
@@ -24,9 +25,11 @@ def get_edo_rate(exp_date_string):
 
     return rate
 
+
 def date_to_string(date):
     '''creates a string formated as mmyy from date e/g/ 0322 from 01.03.2022'''
     pass
+
 
 def get_user_dates():
     '''Get the dates from the user'''
@@ -41,13 +44,14 @@ def get_user_dates():
     fin_date, end = validate_input_data(fin_str)
     if end or fin_date is None:
         return None, None, end
-    
+
     # if the input strings are correct we have to chech if the dates are ok
     valid = validate_dates(init_date, fin_date)
     if not valid:
         end = True
 
     return init_date, fin_date, end
+
 
 def validate_input_data(date_str):
     '''check if the input data are valid'''
@@ -61,12 +65,14 @@ def validate_input_data(date_str):
             end = True
             return None, end
         else:
-            print('\nThe format of the dates is incorrect, it should be MM-YY.')
+            print('\n')
+            print('The format of the dates is incorrect, it should be MM-YY.')
             print('For example: March 2022 should be passed as 03-22.\n')
             print("Let's try again:\n")
             date = None
 
     return date, end
+
 
 def validate_dates(begin, finish):
     '''
@@ -85,7 +91,7 @@ def validate_dates(begin, finish):
         valid.append(False)
         print('The initial date is later than or equal to the finish date')
         print("Let's try again:\n")
-    
+
     # is the initial or final date earlier than or equal to today?
     today = datetime.date.today()
     delta_init = today - begin
@@ -109,7 +115,7 @@ def validate_dates(begin, finish):
         return False
     else:
         return True
-   
+
 
 if __name__ == '__main__':
 
