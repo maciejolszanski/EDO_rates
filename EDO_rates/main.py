@@ -3,6 +3,7 @@ import datetime
 
 from bs4 import BeautifulSoup
 from dateutil.relativedelta import relativedelta
+from visualise import visulise_EDO
 
 INFO = '''\nHello!
 This program will show you what was the rent of Polish EDO through time.
@@ -162,5 +163,7 @@ if __name__ == '__main__':
         for i, exp in enumerate(exp_dates_str):
             rates.append(get_edo_rate(exp))
             print(f"Collected {i+1}/{len(exp_dates_str)}")
+
+        visulise_EDO(dates_to_check, rates)
 
         break
