@@ -1,9 +1,8 @@
-from logging import raiseExceptions
 import requests
 import datetime
 
 from bs4 import BeautifulSoup
-
+from dateutil.relativedelta import relativedelta
 
 INFO = '''\nHello!
 This program will show you what was the rent of Polish EDO through time.
@@ -26,7 +25,7 @@ def get_edo_rate(exp_date_string):
     return rate
 
 
-def date_to_string(date):
+def date_to_exp_string(date):
     '''creates a string formated as mmyy from date e/g/ 0322 from 01.03.2022'''
     pass
 
@@ -48,7 +47,8 @@ def get_user_dates():
     # if the input strings are correct we have to chech if the dates are ok
     valid = validate_dates(init_date, fin_date)
     if not valid:
-        end = True
+        init_date = None
+        fin_date = None
 
     return init_date, fin_date, end
 
@@ -59,7 +59,7 @@ def validate_input_data(date_str):
     end = False
 
     try:
-        date = datetime.datetime.strptime(date_str, '%m-%y')
+        date = datetime.datetime.strptime(date_str, '%m-%y').date()
     except ValueError:
         if date_str == 'q':
             end = True
@@ -76,7 +76,7 @@ def validate_input_data(date_str):
 
 def validate_dates(begin, finish):
     '''
-        validate if the initial and final dates are correct
+        Validate if the initial and final dates are correct
         e.g. the initial date should be earlier than the final date
 
         When one of the test is not failes it appends False to the 'valid' list
@@ -117,6 +117,17 @@ def validate_dates(begin, finish):
         return True
 
 
+def get_dates_to_check(init, fin):
+    '''creates a list of dates to check EDO rate for'''
+
+    date = init
+    dates = []
+    while fin - date >= datetime.timedelta(days=0):
+        dates.append(date)
+        date += relativedelta(months=1)
+    
+    return dates
+
 if __name__ == '__main__':
 
     print(INFO)
@@ -124,5 +135,12 @@ if __name__ == '__main__':
     while True:
         # ask user about the initial and final date to check EDO rates
         init_date, fin_date, end = get_user_dates()
+
+        # If the 'q' was pressed the functions stops
         if end:
             break
+        # When the dates are invalid the while loop starts again
+        elif init_date is None or fin_date is None:
+            continue
+        
+        dates_to_check = get_dates_to_check(init_date, fin_date)
