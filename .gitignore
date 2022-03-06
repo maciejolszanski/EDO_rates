@@ -3,3 +3,6 @@ env/
 
 # pycache
 __pycache__/
+
+# egg files
+EDO_rates.egg-info/
