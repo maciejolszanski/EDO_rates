@@ -16,7 +16,7 @@ def test_get_user_dates(monkeypatch):
 validate_input_data_test_data = [
     ('q', [None, True]),
     ('a', [None, False]),
-    ('01-21', [datetime.datetime.strptime('01-21','%m-%y'), False]),
+    ('01-21', [datetime.datetime.strptime('01-21','%m-%y').date(), False]),
 ]
 @pytest.mark.parametrize('sample, expected', validate_input_data_test_data)
 def test_validate_input_data(sample, expected):
@@ -35,3 +35,11 @@ validate_dates_input_data = [
 def test_validate_dates(date1, date2, expected):
     assert validate_dates(date1, date2) == expected
 
+def test_get_dates_to_check():
+    date1 = datetime.date(2012, 1, 1)
+    date2 = datetime.date(2012, 2, 1)
+    date3 = datetime.date(2012, 3, 1)
+
+    dates = [date1, date2, date3]
+
+    assert get_dates_to_check(date1, date3) == dates
