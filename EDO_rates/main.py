@@ -26,14 +26,10 @@ if __name__ == '__main__':
             continue
 
         dates_to_check = eh.get_dates_to_check(init_date, fin_date)
-        exp_dates_str = eh.get_exp_str(dates_to_check)
+        exp_dates_str = [eh.get_exp_str(date) for date in dates_to_check]
 
-        print('\nCollecting data...')
-        rates = []
-        for i, exp in enumerate(exp_dates_str):
-            rates.append(eh.get_edo_rate(exp))
-            print(f"Collected {i+1}/{len(exp_dates_str)}")
-
+        rates = eh.extract_data(exp_dates_str)
+ 
         visulise_EDO(dates_to_check, rates)
 
         break

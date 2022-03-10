@@ -43,7 +43,7 @@ class EdoHandler():
             for i, date in enumerate(dates):
                 exp = self.get_exp_str(date)
                 rate = self.get_edo_rate(exp)
-                writer.writerow([date, rate])
+                writer.writerow([date, exp, rate])
                 print(f"Downloaded {i+1}/{len(dates)}")
 
     def check_updates(self):
@@ -123,7 +123,7 @@ class EdoHandler():
         return dates
 
     def get_exp_str(self, date):
-        '''converts dates to strings mmyy of expiration date'''
+        '''converts dates to strings 'mmyy' of expiration date'''
 
         exp_date = date + relativedelta(years=10)
         month_str = str(exp_date.month)
@@ -133,6 +133,20 @@ class EdoHandler():
         exp_str = month_str + year_str[-2:]
 
         return exp_str
+
+    def extract_data(self,exp_list):
+        '''get_needed data from csv file'''
+
+        with open(self.data_path, 'r') as f:
+            reader = csv.reader(f)
+            
+            values = []
+            for row in reader:
+                # if the current row exp date is in exp_list
+                if row[1] in exp_list:
+                    values.append(float(row[2]))
+        
+        return values
 
     def _validate_input_data(self, date_str):
         '''check if the input data are valid'''
