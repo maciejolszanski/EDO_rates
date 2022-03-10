@@ -9,3 +9,7 @@ EDO_rates.egg-info/
 
 # my local data
 data/
+
+# coverage
+htmlcov/
+.coverage

@@ -1,17 +1,41 @@
 import pytest
-from EDO_rates.main import *
+from EDO_rates.edo_handler import EdoHandler
 import datetime
+from unittest import mock
 
 def test_get_edo_rate():
-    assert get_edo_rate('1231') == 1.7
+    eh = EdoHandler()
+    assert eh.get_edo_rate('1231') == 1.7
 
-def test_get_user_dates(monkeypatch):
-    monkeypatch.setattr('builtins.input', lambda _: ['12-21', '01-15'])
+def test_get_single_date_valid():
+    with mock.patch('builtins.input', return_value="12-21"):
+        eh = EdoHandler()
+        date1 = datetime.date(2021, 12, 1)
+        assert list(eh.get_single_date('initial')) == [date1, False]
 
-    date1 = datetime.datetime.strptime('12-21','%m-%y')
-    date2 = datetime.datetime.strptime('01-15','%m-%y')
+def test_get_single_date_not_valid():
+    with mock.patch('builtins.input', return_value="21-21"):
+        eh = EdoHandler()
+        assert list(eh.get_single_date('initial')) == [None, False]
 
-    assert date1, date2 == ['12-21', '01-15']
+def test_get_single_date_exit():
+    with mock.patch('builtins.input', return_value="q"):
+        eh = EdoHandler()
+        assert list(eh.get_single_date('initial')) == [None, True]
+
+""" I cannot patch multiple methods
+def get_fake_get_single_data(date, end):
+    '''fake function for testing get_user_dates'''
+    return date, end
+
+@mock.patch.object(EdoHandler, 'get_single_date', get_fake_get_single_data(datetime.date(2020, 12, 1), False))
+def test_get_user_dates_ok():
+    date1 = datetime.date(2020, 12, 1)
+    date2 = datetime.date(2021, 12, 1)
+
+    eh = EdoHandler()
+    assert list(eh.get_user_dates()) == [date1, date2, False]
+"""
 
 validate_input_data_test_data = [
     ('q', [None, True]),
@@ -20,7 +44,8 @@ validate_input_data_test_data = [
 ]
 @pytest.mark.parametrize('sample, expected', validate_input_data_test_data)
 def test_validate_input_data(sample, expected):
-    date_user, end = validate_input_data(sample)
+    eh = EdoHandler()
+    date_user, end = eh._validate_input_data(sample)
 
     assert [date_user, end] == expected
 
@@ -33,7 +58,8 @@ validate_dates_input_data = [
 ]
 @pytest.mark.parametrize('date1, date2, expected', validate_dates_input_data)
 def test_validate_dates(date1, date2, expected):
-    assert validate_dates(date1, date2) == expected
+    eh = EdoHandler()
+    assert eh._validate_dates(date1, date2) == expected
 
 @pytest.fixture
 def dates():
@@ -48,9 +74,13 @@ def dates():
 def test_get_dates_to_check(dates):
     date1 = datetime.date(2012, 1, 1)
     date2 = datetime.date(2012, 3, 1)
+    eh = EdoHandler()
 
-    assert get_dates_to_check(date1, date2) == dates
+    assert eh.get_dates_to_check(date1, date2) == dates
 
-def test_get_exp_str(dates):
-    exp_str = get_exp_str(dates)
-    assert exp_str == ['0122', '0222', '0322']
+def test_get_exp_str():
+    date = datetime.date(2012, 1, 1)
+    eh = EdoHandler()
+    exp_str = eh.get_exp_str(date)
+    
+    assert exp_str == '0122'

@@ -87,14 +87,10 @@ class EdoHandler():
         '''Get the dates from the user'''
         end = False
 
-        init_str = input("Pass an initial date as MM-YY:\n")
-        init_date, end = self._validate_input_data(init_str)
-        if end or init_date is None:
-            return None, None, end
+        init_date, end = self.get_single_date('initial')
+        fin_date, end = self.get_single_date('final')
 
-        fin_str = input("Pass a final date as MM-YY:\n")
-        fin_date, end = self._validate_input_data(fin_str)
-        if end or fin_date is None:
+        if end or (fin_date is None or init_date is None):
             return None, None, end
 
         # if the input strings are correct we have to chech if the dates are ok
@@ -104,6 +100,16 @@ class EdoHandler():
             fin_date = None
 
         return init_date, fin_date, end
+
+    def get_single_date(self, adjective):
+        '''get a single date from the user'''
+        end = False
+        date_str = input(f"Pass an {adjective} date as MM-YY:\n")
+        date, end = self._validate_input_data(date_str)
+        if end or date is None:
+            return None, end
+        
+        return date, end
 
     def get_dates_to_check(self, init, fin):
         '''creates a list of dates to check EDO rate for'''
